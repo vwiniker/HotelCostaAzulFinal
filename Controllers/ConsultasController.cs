@@ -111,7 +111,7 @@ namespace HotelCostaAzulFinal.Controllers
                         var noches = (fechaFinDate.Value - fechaInicioDate.Value).Days;
                         consulta.TotalNoches = noches;
                         consulta.PrecioMinimo = consulta.HabitacionesDisponibles.Min(h => h.PrecioPorNoche * noches);
-                        consulta.PrecioMaximo = consulta.HabitacionesDisponibles.Max(h => h.PrecioPorNoche * noches);
+                        consulta.PrecioMaximoTotal = consulta.HabitacionesDisponibles.Max(h => h.PrecioPorNoche * noches);
                         consulta.PrecioPromedio = consulta.HabitacionesDisponibles.Average(h => h.PrecioPorNoche * noches);
                     }
                 }
@@ -261,7 +261,7 @@ namespace HotelCostaAzulFinal.Controllers
         public List<Habitacion> HabitacionesDisponibles { get; set; } = new();
         public int TotalNoches { get; set; }
         public decimal PrecioMinimo { get; set; }
-        public decimal PrecioMaximo { get; set; }
+        public decimal PrecioMaximoTotal { get; set; }
         public decimal PrecioPromedio { get; set; }
     }
 

@@ -114,7 +114,8 @@ namespace HotelCostaAzulFinal.Controllers
                 foreach (var item in reporteOcupacion)
                 {
                     item.DiasOcupados = item.ReservasEnPeriodo
-                        .Sum(r => Math.Min(r.FechaFin, fechaFin).Subtract(Math.Max(r.FechaInicio, fechaInicio)).Days);
+                        .Sum(r => (int)Math.Min(r.FechaFin.Subtract(fechaInicio).TotalDays,
+                                               fechaFin.Subtract(r.FechaInicio).TotalDays));
 
                     item.PorcentajeOcupacion = item.TotalDiasDisponibles > 0
                         ? (double)item.DiasOcupados / item.TotalDiasDisponibles * 100

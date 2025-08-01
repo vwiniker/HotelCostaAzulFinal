@@ -167,7 +167,7 @@ namespace HotelCostaAzulFinal.Controllers
         // GET: Ayuda/Contacto
         public IActionResult Contacto()
         {
-            return View();
+            return View(new ConsultaAyuda());
         }
 
         // POST: Ayuda/EnviarConsulta
@@ -199,12 +199,13 @@ namespace HotelCostaAzulFinal.Controllers
                             return View("Contacto", consulta);
                         }
 
+                        // Crear directorio si no existe
+                        var uploadsPath = Path.Combine(_environment.WebRootPath, "uploads", "consultas");
+                        Directory.CreateDirectory(uploadsPath);
+
                         // Guardar imagen
                         var nombreArchivo = $"{Guid.NewGuid()}{extension}";
-                        var rutaCompleta = Path.Combine(_environment.WebRootPath, "uploads", "consultas", nombreArchivo);
-
-                        // Crear directorio si no existe
-                        Directory.CreateDirectory(Path.GetDirectoryName(rutaCompleta)!);
+                        var rutaCompleta = Path.Combine(uploadsPath, nombreArchivo);
 
                         using (var stream = new FileStream(rutaCompleta, FileMode.Create))
                         {
@@ -265,20 +266,5 @@ namespace HotelCostaAzulFinal.Controllers
         public string Pregunta { get; set; } = string.Empty;
         public string Respuesta { get; set; } = string.Empty;
         public string Categoria { get; set; } = string.Empty;
-    }
-
-    public class ConsultaAyuda
-    {
-        public int Id { get; set; }
-        public string Nombre { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public string Telefono { get; set; } = string.Empty;
-        public string Asunto { get; set; } = string.Empty;
-        public string Mensaje { get; set; } = string.Empty;
-        public string? RutaImagen { get; set; }
-        public DateTime FechaEnvio { get; set; }
-        public string Estado { get; set; } = "Pendiente";
-        public string? Respuesta { get; set; }
-        public DateTime? FechaRespuesta { get; set; }
     }
 }
