@@ -29,18 +29,18 @@ namespace HotelCostaAzulFinal.Controllers
                     HabitacionesDisponibles = await _context.Habitaciones.CountAsync(h => h.Disponible),
                     TotalReservas = await _context.Reservas.CountAsync(),
                     ReservasHoy = await _context.Reservas.CountAsync(r => r.FechaReserva.Date == DateTime.Today),
-                    TotalUsuarios = await _context.Users.CountAsync(),
-                    UsuariosAdmins = await _context.Users.CountAsync(u => u.EsAdmin),
+                    TotalClientes = await _context.Users.CountAsync(u => !u.EsAdmin),
+                    ReservasConfirmadas = await _context.Reservas.CountAsync(r => r.Estado == "Confirmada"),
+                    ReservasPendientes = await _context.Reservas.CountAsync(r => r.Estado == "Pendiente"),
+                    IngresosTotales = await _context.Reservas
+                        .Where(r => r.Estado == "Confirmada" || r.Estado == "Completada")
+                        .SumAsync(r => r.Total),
 
-                    // Reservas recientes (sin incluir relaciones por ahora)
-                    ReservasRecientes = await _context.Reservas
+                    // Últimas reservas con relaciones
+                    UltimasReservas = await _context.Reservas
+                        .Include(r => r.Usuario)
+                        .Include(r => r.Habitacion)
                         .OrderByDescending(r => r.FechaReserva)
-                        .Take(5)
-                        .ToListAsync(),
-
-                    // Habitaciones más reservadas (sin incluir relaciones por ahora)
-                    HabitacionesPopulares = await _context.Habitaciones
-                        .OrderBy(h => h.Numero)
                         .Take(5)
                         .ToListAsync()
                 };
@@ -80,6 +80,8 @@ namespace HotelCostaAzulFinal.Controllers
         public async Task<IActionResult> Reservas()
         {
             var reservas = await _context.Reservas
+                .Include(r => r.Usuario)
+                .Include(r => r.Habitacion)
                 .OrderByDescending(r => r.FechaReserva)
                 .ToListAsync();
 
@@ -111,19 +113,5 @@ namespace HotelCostaAzulFinal.Controllers
                 return RedirectToAction("Reservas");
             }
         }
-    }
-
-    // ViewModel para el Dashboard
-    public class DashboardViewModel
-    {
-        public int TotalHabitaciones { get; set; }
-        public int HabitacionesDisponibles { get; set; }
-        public int TotalReservas { get; set; }
-        public int ReservasHoy { get; set; }
-        public int TotalUsuarios { get; set; }
-        public int UsuariosAdmins { get; set; }
-
-        public List<Reserva> ReservasRecientes { get; set; } = new();
-        public List<Habitacion> HabitacionesPopulares { get; set; } = new();
     }
 }

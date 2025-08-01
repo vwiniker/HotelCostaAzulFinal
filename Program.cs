@@ -1,68 +1,82 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using HotelCostaAzulFinal.Data;
 using HotelCostaAzulFinal.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllers();
-builder.Services.AddControllersWithViews(); // Para MVC
-
-// Swagger
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-// Entity Framework + Identity
+// Configurar servicios
 builder.Services.AddDbContext<HotelContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Configuración de Identity
+// Configurar Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
-    // Configuración de contraseñas
+    // Configuracion de contraseñas
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
-    options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireUppercase = false;
+    options.Password.RequireNonAlphanumeric = false;
     options.Password.RequiredLength = 6;
-    options.Password.RequiredUniqueChars = 1;
 
-    // Configuración de bloqueo
-    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-    options.Lockout.MaxFailedAccessAttempts = 5;
-    options.Lockout.AllowedForNewUsers = true;
-
-    // Configuración de usuario
-    options.User.AllowedUserNameCharacters =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+    // Configuracion de usuario
     options.User.RequireUniqueEmail = true;
-
-    // Configuración de confirmación de email (deshabilitada por ahora)
     options.SignIn.RequireConfirmedEmail = false;
-    options.SignIn.RequireConfirmedPhoneNumber = false;
+
+    // Configuracion de bloqueo
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+    options.Lockout.MaxFailedAccessAttempts = 5;
 })
 .AddEntityFrameworkStores<HotelContext>()
 .AddDefaultTokenProviders();
 
-// Configuración de cookies
+// Configurar cookies
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Account/Login";
     options.LogoutPath = "/Account/Logout";
     options.AccessDeniedPath = "/Account/AccessDenied";
+    options.ExpireTimeSpan = TimeSpan.FromHours(24);
     options.SlidingExpiration = true;
-    options.ExpireTimeSpan = TimeSpan.FromHours(1);
 });
+
+// Agregar servicios MVC
+builder.Services.AddControllersWithViews();
+
+// Agregar servicios de API
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new()
+    {
+        Title = "Hotel Costa Azul API",
+        Version = "v1",
+        Description = "API para el sistema de reservas del Hotel Costa Azul"
+    });
+});
+
+// Configurar CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+
+// Agregar logging
+builder.Services.AddLogging();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configurar pipeline de requests
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
     app.UseDeveloperExceptionPage();
+    app.UseSwagger();
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hotel Costa Azul API v1"));
 }
 else
 {
@@ -74,35 +88,44 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseCors("AllowAll");
 
-// IMPORTANTE: El orden es crucial
-app.UseAuthentication();  // Debe ir antes que Authorization
+// Configurar autenticación y autorización
+app.UseAuthentication();
 app.UseAuthorization();
 
-// Map controllers for APIs
-app.MapControllers();
-
-// Map controllers for MVC views
+// Configurar rutas
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-// Crear roles y admin por defecto
+// Mapear controladores de API
+app.MapControllers();
+
+// Crear roles y usuario admin inicial
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    await CreateRolesAndAdminUser(services);
+    try
+    {
+        await CreateRolesAndAdminUser(services);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Error creando roles y usuario administrador");
+    }
 }
 
 app.Run();
 
-// Método para crear roles y usuario admin por defecto
+// Método para crear roles y usuario admin
 static async Task CreateRolesAndAdminUser(IServiceProvider serviceProvider)
 {
     var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-    // Crear roles si no existen
+    // Crear roles
     string[] roleNames = { "Admin", "Cliente" };
     foreach (var roleName in roleNames)
     {
@@ -112,7 +135,7 @@ static async Task CreateRolesAndAdminUser(IServiceProvider serviceProvider)
         }
     }
 
-    // Crear usuario admin por defecto si no existe
+    // Crear usuario administrador si no existe
     var adminEmail = "admin@hotelcostaazul.com";
     var adminUser = await userManager.FindByEmailAsync(adminEmail);
 
@@ -132,6 +155,7 @@ static async Task CreateRolesAndAdminUser(IServiceProvider serviceProvider)
         };
 
         var result = await userManager.CreateAsync(adminUser, "Admin123!");
+
         if (result.Succeeded)
         {
             await userManager.AddToRoleAsync(adminUser, "Admin");

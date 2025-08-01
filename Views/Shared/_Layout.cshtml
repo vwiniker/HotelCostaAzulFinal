@@ -157,6 +157,54 @@
                             </a>
                         </li>
 
+                        <li>
+                            <a href="/Consultas" onclick="window.location.href='/Consultas'">
+                                <i class="fas fa-search"></i> Consultas
+                            </a>
+                        </li>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li>
+                                <a href="/Admin/Dashboard" onclick="window.location.href='/Admin/Dashboard'">
+                                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/Reportes" onclick="window.location.href='/Reportes'">
+                                    <i class="fas fa-chart-bar"></i> Reportes
+                                </a>
+                            </li>
+                        }
+
+                        <li>
+                            <form asp-controller="Account" asp-action="Logout" method="post" style="display: inline;">
+                                <button type="submit" class="nav-menu-btn" onclick="return confirm('¿Seguro que quieres cerrar sesión?')">
+                                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                                </button>
+                            </form>
+                        </li>
+                    }
+                    else
+                    {
+                        <li>
+                            <a href="/Account/Login" onclick="window.location.href='/Account/Login'">
+                                <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/Account/Register" onclick="window.location.href='/Account/Register'">
+                                <i class="fas fa-user-plus"></i> Registrarse
+                            </a>
+                        </li>
+                    }
+
+                    <li>
+                        <a href="/Ayuda" onclick="window.location.href='/Ayuda'">
+                            <i class="fas fa-question-circle"></i> Ayuda
+                        </a>
+                    </li>
+
                         @if (User.IsInRole("Admin"))
                         {
                             <li>

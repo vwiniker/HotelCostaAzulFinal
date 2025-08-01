@@ -1,0 +1,383 @@
+﻿@model List<HotelCostaAzulFinal.Controllers.SeccionAyuda>
+@{
+    ViewData["Title"] = "Centro de Ayuda";
+}
+
+<style>
+    .ayuda-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 4rem 0;
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+        .ayuda-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .ayuda-hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+
+    .secciones-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .seccion-card {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+        .seccion-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            border-color: #667eea;
+            text-decoration: none;
+            color: inherit;
+        }
+
+    .seccion-icon {
+        font-size: 3rem;
+        color: #667eea;
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    .seccion-titulo {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 1rem;
+    }
+
+    .seccion-contenido {
+        color: #718096;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+    }
+
+    .seccion-link {
+        color: #667eea;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: color 0.3s;
+    }
+
+        .seccion-link:hover {
+            color: #5a67d8;
+        }
+
+    .accesos-rapidos {
+        background: #f7fafc;
+        padding: 3rem 0;
+        margin: 3rem 0;
+        border-radius: 20px;
+    }
+
+    .accesos-titulo {
+        text-align: center;
+        font-size: 2rem;
+        color: #2d3748;
+        margin-bottom: 2rem;
+    }
+
+    .accesos-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .acceso-card {
+        background: white;
+        border-radius: 10px;
+        padding: 1.5rem;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+        .acceso-card:hover {
+            transform: translateY(-5px);
+            text-decoration: none;
+            color: inherit;
+        }
+
+    .acceso-icon {
+        font-size: 2rem;
+        color: #38a169;
+        margin-bottom: 1rem;
+    }
+
+    .contacto-urgente {
+        background: linear-gradient(45deg, #f56565, #e53e3e);
+        color: white;
+        padding: 2rem;
+        border-radius: 15px;
+        text-align: center;
+        margin-top: 3rem;
+    }
+
+        .contacto-urgente h3 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+    .contacto-info {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+
+    .contacto-item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        font-weight: 600;
+    }
+
+    .busqueda-ayuda {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        margin-bottom: 3rem;
+    }
+
+    .busqueda-input {
+        width: 100%;
+        padding: 1rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        background: #f7fafc;
+        transition: all 0.3s;
+    }
+
+        .busqueda-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+        }
+
+    @@media (max-width: 768px) {
+        .ayuda-hero h1
+
+    {
+        font-size: 2rem;
+    }
+
+    .secciones-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .contacto-info {
+        grid-template-columns: 1fr;
+    }
+
+    }
+</style>
+
+<div class="ayuda-hero">
+    <div class="container">
+        <h1>🆘 Centro de Ayuda</h1>
+        <p>Encuentra respuestas rápidas a tus preguntas o contáctanos para asistencia personalizada</p>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Búsqueda de ayuda -->
+    <div class="busqueda-ayuda">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <i class="fas fa-search" style="color: #667eea; font-size: 1.2rem;"></i>
+            <input type="text" placeholder="¿En qué podemos ayudarte? Busca aquí..." class="busqueda-input" id="busquedaAyuda">
+        </div>
+    </div>
+
+    <!-- Secciones principales de ayuda -->
+    <div class="secciones-grid">
+        <a href="@Url.Action("ComoReservar")" class="seccion-card">
+            <i class="fas fa-calendar-plus seccion-icon"></i>
+            <h3 class="seccion-titulo">📋 Cómo Hacer una Reserva</h3>
+            <p class="seccion-contenido">
+                Aprende paso a paso cómo reservar tu habitación ideal. Desde la selección de fechas hasta la confirmación de tu reserva.
+            </p>
+            <span class="seccion-link">
+                Ver guía completa <i class="fas fa-arrow-right"></i>
+            </span>
+        </a>
+
+        <a href="@Url.Action("GestionCuenta")" class="seccion-card">
+            <i class="fas fa-user-cog seccion-icon"></i>
+            <h3 class="seccion-titulo">👤 Gestión de Cuenta</h3>
+            <p class="seccion-contenido">
+                Administra tu perfil, actualiza tu información personal y gestiona tus preferencias de cuenta.
+            </p>
+            <span class="seccion-link">
+                Gestionar cuenta <i class="fas fa-arrow-right"></i>
+            </span>
+        </a>
+
+        <a href="@Url.Action("PagosFacturacion")" class="seccion-card">
+            <i class="fas fa-credit-card seccion-icon"></i>
+            <h3 class="seccion-titulo">💳 Pagos y Facturación</h3>
+            <p class="seccion-contenido">
+                Información detallada sobre métodos de pago, políticas de cancelación y cómo obtener facturas.
+            </p>
+            <span class="seccion-link">
+                Ver información <i class="fas fa-arrow-right"></i>
+            </span>
+        </a>
+
+        <a href="@Url.Action("ServiciosHotel")" class="seccion-card">
+            <i class="fas fa-concierge-bell seccion-icon"></i>
+            <h3 class="seccion-titulo">🛎️ Servicios del Hotel</h3>
+            <p class="seccion-contenido">
+                Descubre todos los servicios y amenidades disponibles durante tu estadía en nuestro hotel.
+            </p>
+            <span class="seccion-link">
+                Explorar servicios <i class="fas fa-arrow-right"></i>
+            </span>
+        </a>
+
+        <a href="@Url.Action("PreguntasFrecuentes")" class="seccion-card">
+            <i class="fas fa-question-circle seccion-icon"></i>
+            <h3 class="seccion-titulo">❓ Preguntas Frecuentes</h3>
+            <p class="seccion-contenido">
+                Encuentra respuestas rápidas a las dudas más comunes de nuestros huéspedes.
+            </p>
+            <span class="seccion-link">
+                Ver FAQ <i class="fas fa-arrow-right"></i>
+            </span>
+        </a>
+
+        <a href="@Url.Action("TutorialVideo")" class="seccion-card">
+            <i class="fas fa-play-circle seccion-icon"></i>
+            <h3 class="seccion-titulo">🎥 Tutorial en Video</h3>
+            <p class="seccion-contenido">
+                Video tutorial completo sobre cómo usar nuestro sistema de reservas de manera efectiva.
+            </p>
+            <span class="seccion-link">
+                Ver video <i class="fas fa-arrow-right"></i>
+            </span>
+        </a>
+    </div>
+
+    <!-- Accesos rápidos -->
+    <div class="accesos-rapidos">
+        <div class="container">
+            <h2 class="accesos-titulo">⚡ Accesos Rápidos</h2>
+            <div class="accesos-grid">
+                <a href="/Reservas/MisReservas" class="acceso-card">
+                    <i class="fas fa-list acceso-icon"></i>
+                    <h4>Mis Reservas</h4>
+                    <p>Ver y gestionar</p>
+                </a>
+
+                <a href="/Account/Profile" class="acceso-card">
+                    <i class="fas fa-user acceso-icon"></i>
+                    <h4>Mi Perfil</h4>
+                    <p>Editar información</p>
+                </a>
+
+                <a href="/HabitacionesWeb" class="acceso-card">
+                    <i class="fas fa-bed acceso-icon"></i>
+                    <h4>Habitaciones</h4>
+                    <p>Explorar opciones</p>
+                </a>
+
+                <a href="@Url.Action("Contacto")" class="acceso-card">
+                    <i class="fas fa-envelope acceso-icon"></i>
+                    <h4>Contactar</h4>
+                    <p>Soporte directo</p>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contacto de emergencia -->
+    <div class="contacto-urgente">
+        <h3>🚨 ¿Necesitas Ayuda Inmediata?</h3>
+        <p>Para asistencia urgente, contáctanos directamente</p>
+        <div class="contacto-info">
+            <div class="contacto-item">
+                <i class="fas fa-phone"></i>
+                <span>+506 2222-3333</span>
+            </div>
+            <div class="contacto-item">
+                <i class="fas fa-envelope"></i>
+                <span>ayuda@hotelcostaazul.com</span>
+            </div>
+            <div class="contacto-item">
+                <i class="fas fa-clock"></i>
+                <span>24/7 Disponible</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const busquedaInput = document.getElementById('busquedaAyuda');
+
+        busquedaInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const termino = this.value.toLowerCase();
+
+                // Redirigir según el término de búsqueda
+                if (termino.includes('reserva') || termino.includes('reservar')) {
+                    window.location.href = '@Url.Action("ComoReservar")';
+                } else if (termino.includes('cuenta') || termino.includes('perfil')) {
+                    window.location.href = '@Url.Action("GestionCuenta")';
+                } else if (termino.includes('pago') || termino.includes('factura')) {
+                    window.location.href = '@Url.Action("PagosFacturacion")';
+                } else if (termino.includes('servicio') || termino.includes('amenidad')) {
+                    window.location.href = '@Url.Action("ServiciosHotel")';
+                } else {
+                    window.location.href = '@Url.Action("PreguntasFrecuentes")';
+                }
+            }
+        });
+
+        // Animación de entrada para las cards
+        const cards = document.querySelectorAll('.seccion-card, .acceso-card');
+        cards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+
+            setTimeout(() => {
+                card.style.transition = 'all 0.6s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+    });
+</script>

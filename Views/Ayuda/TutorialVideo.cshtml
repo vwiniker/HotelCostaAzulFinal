@@ -1,0 +1,593 @@
+﻿@{
+    ViewData["Title"] = "Tutorial en Video - Centro de Ayuda";
+}
+
+<style>
+    .tutorial-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 3rem 0;
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+        .tutorial-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+
+    .video-principal {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        margin-bottom: 3rem;
+        text-align: center;
+    }
+
+    .video-container {
+        position: relative;
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto 2rem;
+        background: #2d3748;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    .video-placeholder {
+        aspect-ratio: 16/9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.2rem;
+        background: linear-gradient(45deg, #2d3748, #4a5568);
+    }
+
+        .video-placeholder i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.7;
+        }
+
+    .play-button {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(255,255,255,0.9);
+        color: #2d3748;
+        border: none;
+        border-radius: 50%;
+        width: 80px;
+        height: 80px;
+        font-size: 2rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+        .play-button:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+            background: white;
+        }
+
+    .video-descripcion {
+        color: #718096;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .tutoriales-adicionales {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .tutorial-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+        .tutorial-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+    .tutorial-thumbnail {
+        height: 200px;
+        background: linear-gradient(45deg, #4a5568, #2d3748);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        position: relative;
+    }
+
+        .tutorial-thumbnail i {
+            font-size: 3rem;
+            opacity: 0.7;
+        }
+
+    .tutorial-duration {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background: rgba(0,0,0,0.8);
+        color: white;
+        padding: 0.25rem 0.5rem;
+        border-radius: 5px;
+        font-size: 0.8rem;
+    }
+
+    .tutorial-content {
+        padding: 1.5rem;
+    }
+
+    .tutorial-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 0.5rem;
+    }
+
+    .tutorial-descripcion {
+        color: #718096;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+    }
+
+    .tutorial-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .tutorial-tag {
+        background: #e2e8f0;
+        color: #4a5568;
+        padding: 0.25rem 0.5rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+    }
+
+    .recursos-adicionales {
+        background: #f7fafc;
+        padding: 3rem 0;
+        border-radius: 20px;
+        margin: 3rem 0;
+    }
+
+    .recursos-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+    }
+
+    .recurso-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+        .recurso-card:hover {
+            transform: translateY(-5px);
+        }
+
+    .recurso-icon {
+        font-size: 3rem;
+        color: #667eea;
+        margin-bottom: 1rem;
+    }
+
+    .recurso-titulo {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 1rem;
+    }
+
+    .recurso-descripcion {
+        color: #718096;
+        margin-bottom: 1.5rem;
+    }
+
+    .btn-recurso {
+        background: #667eea;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 25px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+
+        .btn-recurso:hover {
+            background: #5a67d8;
+            color: white;
+            text-decoration: none;
+            transform: translateY(-2px);
+        }
+
+    .nota-importante {
+        background: #fef5e7;
+        border: 1px solid #f6d55c;
+        border-left: 4px solid #f6d55c;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin: 2rem 0;
+    }
+
+        .nota-importante h4 {
+            color: #744210;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nota-importante p {
+            color: #744210;
+            margin: 0;
+        }
+
+    @@media (max-width: 768px) {
+        .tutorial-hero h1
+
+    {
+        font-size: 2rem;
+    }
+
+    .tutoriales-adicionales {
+        grid-template-columns: 1fr;
+    }
+
+    .recursos-grid {
+        grid-template-columns: 1fr;
+    }
+
+    }
+</style>
+
+<div class="tutorial-hero">
+    <div class="container">
+        <h1>🎥 Tutorial en Video</h1>
+        <p>Aprende a usar nuestro sistema paso a paso con estos videos tutoriales</p>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Video principal -->
+    <div class="video-principal">
+        <h2 style="color: #2d3748; margin-bottom: 2rem;">Tutorial Completo del Sistema</h2>
+
+        <div class="video-container" onclick="reproducirVideo('principal')">
+            <div class="video-placeholder">
+                <div style="text-align: center;">
+                    <i class="fas fa-play-circle"></i>
+                    <div>Tutorial Completo - Sistema de Reservas</div>
+                    <div style="font-size: 0.9rem; opacity: 0.8; margin-top: 0.5rem;">Duración: 12:30 minutos</div>
+                </div>
+            </div>
+            <button class="play-button">
+                <i class="fas fa-play"></i>
+            </button>
+        </div>
+
+        <div class="video-descripcion">
+            En este video tutorial completo aprenderás a navegar por nuestro sistema de reservas,
+            desde el registro de usuario hasta la confirmación de tu reserva. Incluye consejos
+            útiles y respuestas a las preguntas más frecuentes.
+        </div>
+
+        <div class="nota-importante">
+            <h4>
+                <i class="fas fa-lightbulb"></i>
+                Consejo Importante
+            </h4>
+            <p>Te recomendamos ver este video con audio y en pantalla completa para una mejor experiencia de aprendizaje.</p>
+        </div>
+    </div>
+
+    <!-- Tutoriales adicionales -->
+    <h2 style="color: #2d3748; margin-bottom: 2rem; text-align: center;">📚 Tutoriales por Tema</h2>
+
+    <div class="tutoriales-adicionales">
+        <div class="tutorial-card" onclick="reproducirVideo('registro')">
+            <div class="tutorial-thumbnail">
+                <i class="fas fa-user-plus"></i>
+                <div class="tutorial-duration">3:45</div>
+            </div>
+            <div class="tutorial-content">
+                <h3 class="tutorial-title">Cómo Registrarse</h3>
+                <p class="tutorial-descripcion">
+                    Aprende el proceso de registro paso a paso, incluyendo la verificación de email y configuración inicial de tu perfil.
+                </p>
+                <div class="tutorial-tags">
+                    <span class="tutorial-tag">Registro</span>
+                    <span class="tutorial-tag">Básico</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="tutorial-card" onclick="reproducirVideo('reserva')">
+            <div class="tutorial-thumbnail">
+                <i class="fas fa-calendar-plus"></i>
+                <div class="tutorial-duration">5:20</div>
+            </div>
+            <div class="tutorial-content">
+                <h3 class="tutorial-title">Hacer una Reserva</h3>
+                <p class="tutorial-descripcion">
+                    Guía detallada sobre cómo seleccionar fechas, elegir habitación y completar el proceso de reserva.
+                </p>
+                <div class="tutorial-tags">
+                    <span class="tutorial-tag">Reservas</span>
+                    <span class="tutorial-tag">Esencial</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="tutorial-card" onclick="reproducirVideo('gestion')">
+            <div class="tutorial-thumbnail">
+                <i class="fas fa-cogs"></i>
+                <div class="tutorial-duration">4:15</div>
+            </div>
+            <div class="tutorial-content">
+                <h3 class="tutorial-title">Gestionar Reservas</h3>
+                <p class="tutorial-descripcion">
+                    Cómo ver, modificar y cancelar tus reservas existentes desde tu panel de usuario.
+                </p>
+                <div class="tutorial-tags">
+                    <span class="tutorial-tag">Gestión</span>
+                    <span class="tutorial-tag">Intermedio</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="tutorial-card" onclick="reproducirVideo('pagos')">
+            <div class="tutorial-thumbnail">
+                <i class="fas fa-credit-card"></i>
+                <div class="tutorial-duration">2:30</div>
+            </div>
+            <div class="tutorial-content">
+                <h3 class="tutorial-title">Métodos de Pago</h3>
+                <p class="tutorial-descripcion">
+                    Información sobre los métodos de pago disponibles y cómo completar el proceso de facturación.
+                </p>
+                <div class="tutorial-tags">
+                    <span class="tutorial-tag">Pagos</span>
+                    <span class="tutorial-tag">Importante</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="tutorial-card" onclick="reproducirVideo('movil')">
+            <div class="tutorial-thumbnail">
+                <i class="fas fa-mobile-alt"></i>
+                <div class="tutorial-duration">3:10</div>
+            </div>
+            <div class="tutorial-content">
+                <h3 class="tutorial-title">Uso en Móvil</h3>
+                <p class="tutorial-descripcion">
+                    Guía específica para usar el sistema desde dispositivos móviles y tablets de manera eficiente.
+                </p>
+                <div class="tutorial-tags">
+                    <span class="tutorial-tag">Móvil</span>
+                    <span class="tutorial-tag">Responsive</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="tutorial-card" onclick="reproducirVideo('consejos')">
+            <div class="tutorial-thumbnail">
+                <i class="fas fa-lightbulb"></i>
+                <div class="tutorial-duration">6:00</div>
+            </div>
+            <div class="tutorial-content">
+                <h3 class="tutorial-title">Tips y Consejos</h3>
+                <p class="tutorial-descripcion">
+                    Consejos avanzados para aprovechar al máximo nuestro sistema y obtener las mejores ofertas.
+                </p>
+                <div class="tutorial-tags">
+                    <span class="tutorial-tag">Consejos</span>
+                    <span class="tutorial-tag">Avanzado</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recursos adicionales -->
+    <div class="recursos-adicionales">
+        <div class="container">
+            <h2 style="text-align: center; color: #2d3748; margin-bottom: 2rem;">📖 Recursos Adicionales</h2>
+
+            <div class="recursos-grid">
+                <div class="recurso-card">
+                    <i class="fas fa-file-pdf recurso-icon"></i>
+                    <h3 class="recurso-titulo">Guía en PDF</h3>
+                    <p class="recurso-descripcion">
+                        Descarga nuestra guía completa en formato PDF para tener siempre a mano.
+                    </p>
+                    <a href="#" class="btn-recurso" onclick="descargarGuia()">
+                        <i class="fas fa-download"></i> Descargar PDF
+                    </a>
+                </div>
+
+                <div class="recurso-card">
+                    <i class="fas fa-images recurso-icon"></i>
+                    <h3 class="recurso-titulo">Galería de Capturas</h3>
+                    <p class="recurso-descripcion">
+                        Ve capturas de pantalla paso a paso del proceso de reserva.
+                    </p>
+                    <a href="@Url.Action("GuiaRapida")" class="btn-recurso">
+                        <i class="fas fa-eye"></i> Ver Galería
+                    </a>
+                </div>
+
+                <div class="recurso-card">
+                    <i class="fas fa-question-circle recurso-icon"></i>
+                    <h3 class="recurso-titulo">Preguntas Frecuentes</h3>
+                    <p class="recurso-descripcion">
+                        Encuentra respuestas rápidas a las dudas más comunes.
+                    </p>
+                    <a href="@Url.Action("PreguntasFrecuentes")" class="btn-recurso">
+                        <i class="fas fa-search"></i> Ver FAQ
+                    </a>
+                </div>
+
+                <div class="recurso-card">
+                    <i class="fas fa-headset recurso-icon"></i>
+                    <h3 class="recurso-titulo">Soporte en Vivo</h3>
+                    <p class="recurso-descripcion">
+                        ¿Necesitas ayuda personalizada? Contacta a nuestro equipo.
+                    </p>
+                    <a href="@Url.Action("Contacto")" class="btn-recurso">
+                        <i class="fas fa-comments"></i> Contactar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Información adicional -->
+    <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+        <h3 style="color: #2d3748; margin-bottom: 1.5rem; text-align: center;">
+            <i class="fas fa-info-circle" style="color: #667eea; margin-right: 0.5rem;"></i>
+            Información Importante
+        </h3>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+            <div style="padding: 1rem; background: #f0f4f8; border-radius: 10px; border-left: 4px solid #3182ce;">
+                <h4 style="color: #2d3748; margin-bottom: 0.5rem;">🎯 Requisitos del Sistema</h4>
+                <ul style="color: #718096; margin: 0; padding-left: 1rem;">
+                    <li>Navegador web moderno (Chrome, Firefox, Safari, Edge)</li>
+                    <li>Conexión a internet estable</li>
+                    <li>JavaScript habilitado</li>
+                    <li>Cookies habilitadas para la sesión</li>
+                </ul>
+            </div>
+
+            <div style="padding: 1rem; background: #f0fff4; border-radius: 10px; border-left: 4px solid #38a169;">
+                <h4 style="color: #2d3748; margin-bottom: 0.5rem;">✅ Mejores Prácticas</h4>
+                <ul style="color: #718096; margin: 0; padding-left: 1rem;">
+                    <li>Completa tu perfil para reservas más rápidas</li>
+                    <li>Verifica siempre las fechas antes de confirmar</li>
+                    <li>Lee las políticas de cancelación</li>
+                    <li>Guarda confirmaciones de reserva</li>
+                </ul>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background: #edf2f7; border-radius: 10px;">
+            <p style="color: #4a5568; margin: 0; font-size: 1.1rem;">
+                <i class="fas fa-clock" style="color: #667eea; margin-right: 0.5rem;"></i>
+                <strong>¿Necesitas ayuda adicional?</strong> Nuestro equipo de soporte está disponible
+                <span style="color: #38a169; font-weight: 600;">24/7</span> para asistirte.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para reproducir videos -->
+<div id="videoModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; justify-content: center; align-items: center;">
+    <div style="position: relative; max-width: 90%; max-height: 90%;">
+        <button onclick="cerrarVideo()" style="position: absolute; top: -40px; right: 0; background: none; border: none; color: white; font-size: 2rem; cursor: pointer;">
+            <i class="fas fa-times"></i>
+        </button>
+        <div id="videoContent" style="background: #2d3748; border-radius: 10px; padding: 2rem; text-align: center; color: white;">
+            <i class="fas fa-play-circle" style="font-size: 5rem; margin-bottom: 1rem; opacity: 0.7;"></i>
+            <h3 id="videoTitle">Cargando video...</h3>
+            <p style="opacity: 0.8;">En una implementación real, aquí se cargaría el video correspondiente.</p>
+            <button onclick="cerrarVideo()" style="background: #667eea; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 25px; margin-top: 1rem; cursor: pointer;">
+                Cerrar
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function reproducirVideo(tipo) {
+        const modal = document.getElementById('videoModal');
+        const title = document.getElementById('videoTitle');
+
+        const titulos = {
+            'principal': 'Tutorial Completo del Sistema',
+            'registro': 'Cómo Registrarse',
+            'reserva': 'Hacer una Reserva',
+            'gestion': 'Gestionar Reservas',
+            'pagos': 'Métodos de Pago',
+            'movil': 'Uso en Móvil',
+            'consejos': 'Tips y Consejos'
+        };
+
+        title.textContent = titulos[tipo] || 'Video Tutorial';
+        modal.style.display = 'flex';
+
+        // Simular carga del video
+        setTimeout(() => {
+            document.getElementById('videoContent').innerHTML = `
+                <div style="aspect-ratio: 16/9; background: #1a202c; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                    <div style="text-align: center;">
+                        <i class="fas fa-video" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                        <p>Video: ${titulos[tipo]}</p>
+                        <p style="font-size: 0.9rem; opacity: 0.7;">En una implementación real, aquí se reproduciría el video.</p>
+                    </div>
+                </div>
+                <button onclick="cerrarVideo()" style="background: #667eea; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 25px; cursor: pointer;">
+                    Cerrar
+                </button>
+            `;
+        }, 1000);
+    }
+
+    function cerrarVideo() {
+        document.getElementById('videoModal').style.display = 'none';
+    }
+
+    function descargarGuia() {
+        // Simular descarga
+        alert('En una implementación real, aquí se descargaría la guía en PDF.');
+    }
+
+    // Cerrar modal con Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            cerrarVideo();
+        }
+    });
+
+    // Animación de entrada
+    document.addEventListener('DOMContentLoaded', function() {
+        const cards = document.querySelectorAll('.tutorial-card, .recurso-card');
+        cards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+
+            setTimeout(() => {
+                card.style.transition = 'all 0.6s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+    });
+</script>
