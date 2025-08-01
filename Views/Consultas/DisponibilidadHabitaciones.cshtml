@@ -1,0 +1,379 @@
+﻿@model HotelCostaAzulFinal.Controllers.ConsultaDisponibilidad
+@{
+    ViewData["Title"] = "Consulta de Disponibilidad";
+}
+
+<style>
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .page-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 15px;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .filtros-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+        .form-group label {
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+            .form-group input:focus,
+            .form-group select:focus {
+                outline: none;
+                border-color: #667eea;
+            }
+
+    .btn-consultar {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        padding: 0.75rem 2rem;
+        border: none;
+        border-radius: 25px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.3s;
+    }
+
+        .btn-consultar:hover {
+            transform: translateY(-2px);
+        }
+
+    .btn-limpiar {
+        background: #f7fafc;
+        color: #4a5568;
+        border: 2px solid #e2e8f0;
+        padding: 0.75rem 2rem;
+        border-radius: 25px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-left: 1rem;
+    }
+
+    .resultados-section {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .estadisticas-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: #f7fafc;
+        padding: 1.5rem;
+        border-radius: 10px;
+        text-align: center;
+        border-left: 4px solid #667eea;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #667eea;
+    }
+
+    .stat-label {
+        color: #718096;
+        margin-top: 0.5rem;
+    }
+
+    .habitaciones-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .habitacion-card {
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 1.5rem;
+        transition: all 0.3s;
+    }
+
+        .habitacion-card:hover {
+            border-color: #667eea;
+            transform: translateY(-5px);
+        }
+
+    .habitacion-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .habitacion-numero {
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+
+    .habitacion-tipo {
+        background: #667eea;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+    }
+
+    .precio-total {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #38a169;
+        text-align: center;
+        margin: 1rem 0;
+    }
+</style>
+
+<div class="container">
+    <div class="page-header">
+        <h1>📅 Consulta de Disponibilidad</h1>
+        <p>Encuentra las habitaciones perfectas para tu estadía</p>
+    </div>
+
+    <!-- Formulario de filtros -->
+    <div class="filtros-card">
+        <h3 style="margin-bottom: 1.5rem; color: #2d3748;">🔍 Filtros de Búsqueda</h3>
+
+        <form method="get" asp-action="DisponibilidadHabitaciones">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="fechaInicio">Fecha de Inicio</label>
+                    <input type="date" id="fechaInicio" name="fechaInicio" value="@ViewBag.FechaInicio" min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                </div>
+
+                <div class="form-group">
+                    <label for="fechaFin">Fecha de Fin</label>
+                    <input type="date" id="fechaFin" name="fechaFin" value="@ViewBag.FechaFin" min="@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")" />
+                </div>
+
+                <div class="form-group">
+                    <label for="tipoHabitacion">Tipo de Habitación</label>
+                    <select id="tipoHabitacion" name="tipoHabitacion">
+                        <option value="">Todos los tipos</option>
+                        @if (ViewBag.TiposHabitacion != null)
+                        {
+                            @foreach (string tipo in ViewBag.TiposHabitacion)
+                            {
+                                <option value="@tipo" selected="@(tipo == Model.TipoHabitacion)">@tipo</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="capacidadMinima">Capacidad Mínima</label>
+                    <select id="capacidadMinima" name="capacidadMinima">
+                        <option value="">Cualquier capacidad</option>
+                        <option value="1" selected="@(Model.CapacidadMinima == 1)">1+ personas</option>
+                        <option value="2" selected="@(Model.CapacidadMinima == 2)">2+ personas</option>
+                        <option value="3" selected="@(Model.CapacidadMinima == 3)">3+ personas</option>
+                        <option value="4" selected="@(Model.CapacidadMinima == 4)">4+ personas</option>
+                        <option value="5" selected="@(Model.CapacidadMinima == 5)">5+ personas</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="precioMaximo">Precio Máximo por Noche</label>
+                    <input type="number" id="precioMaximo" name="precioMaximo" value="@Model.PrecioMaximo" placeholder="₡0" step="1000" />
+                </div>
+            </div>
+
+            <div style="text-align: center;">
+                <button type="submit" class="btn-consultar">
+                    <i class="fas fa-search"></i> Consultar Disponibilidad
+                </button>
+                <button type="button" class="btn-limpiar" onclick="limpiarFiltros()">
+                    <i class="fas fa-eraser"></i> Limpiar Filtros
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Resultados -->
+    @if (Model.HabitacionesDisponibles != null && Model.HabitacionesDisponibles.Any())
+    {
+        <div class="resultados-section">
+            <h3 style="margin-bottom: 1.5rem; color: #2d3748;">📊 Resultados de la Consulta</h3>
+
+            <!-- Estadísticas -->
+            <div class="estadisticas-grid">
+                <div class="stat-card">
+                    <div class="stat-number">@Model.HabitacionesDisponibles.Count</div>
+                    <div class="stat-label">Habitaciones Disponibles</div>
+                </div>
+
+                @if (Model.TotalNoches > 0)
+                {
+                    <div class="stat-card">
+                        <div class="stat-number">@Model.TotalNoches</div>
+                        <div class="stat-label">Noches de Estadía</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-number">₡@Model.PrecioMinimo.ToString("N0")</div>
+                        <div class="stat-label">Precio Mínimo Total</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-number">₡@Model.PrecioPromedio.ToString("N0")</div>
+                        <div class="stat-label">Precio Promedio Total</div>
+                    </div>
+                }
+            </div>
+
+            <!-- Lista de habitaciones -->
+            <div class="habitaciones-grid">
+                @foreach (var habitacion in Model.HabitacionesDisponibles)
+                {
+                    <div class="habitacion-card">
+                        <div class="habitacion-header">
+                            <div class="habitacion-numero">Habitación @habitacion.Numero</div>
+                            <div class="habitacion-tipo">@habitacion.Tipo</div>
+                        </div>
+
+                        <p style="color: #718096; margin-bottom: 1rem;">
+                            @(habitacion.Descripcion ?? "Habitación cómoda y bien equipada")
+                        </p>
+
+                        <div style="margin-bottom: 1rem;">
+                            <strong>Capacidad:</strong> @habitacion.Capacidad personas<br>
+                            <strong>Precio por noche:</strong> ₡@habitacion.PrecioPorNoche.ToString("N0")
+                        </div>
+
+                        @if (Model.TotalNoches > 0)
+                        {
+                            <div class="precio-total">
+                                Total: ₡@((habitacion.PrecioPorNoche * Model.TotalNoches).ToString("N0"))
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(habitacion.Caracteristicas))
+                        {
+                            <div style="margin-bottom: 1rem;">
+                                <strong>Características:</strong><br>
+                                <small style="color: #718096;">@habitacion.Caracteristicas</small>
+                            </div>
+                        }
+
+                        <div style="text-align: center; margin-top: 1rem;">
+                            <a href="/Reservas/Create?habitacionId=@habitacion.Id"
+                               class="btn-consultar" style="text-decoration: none; display: inline-block;">
+                                <i class="fas fa-calendar-plus"></i> Reservar Ahora
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    else if (Model.HabitacionesDisponibles != null)
+    {
+        <div class="resultados-section" style="text-align: center;">
+            <div style="padding: 3rem;">
+                <i class="fas fa-search" style="font-size: 4rem; color: #cbd5e0; margin-bottom: 1rem;"></i>
+                <h3 style="color: #4a5568; margin-bottom: 1rem;">No se encontraron habitaciones</h3>
+                <p style="color: #718096;">
+                    No hay habitaciones disponibles que coincidan con los criterios de búsqueda.
+                    Intenta ajustar los filtros o seleccionar otras fechas.
+                </p>
+                <button type="button" class="btn-limpiar" onclick="limpiarFiltros()" style="margin-top: 1rem;">
+                    <i class="fas fa-refresh"></i> Limpiar y Buscar de Nuevo
+                </button>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Configurar fechas mínimas
+        const fechaInicio = document.getElementById('fechaInicio');
+        const fechaFin = document.getElementById('fechaFin');
+        const today = new Date().toISOString().split('T')[0];
+
+        fechaInicio.setAttribute('min', today);
+
+        fechaInicio.addEventListener('change', function() {
+            if (this.value) {
+                const nextDay = new Date(this.value);
+                nextDay.setDate(nextDay.getDate() + 1);
+                const minFechaFin = nextDay.toISOString().split('T')[0];
+                fechaFin.setAttribute('min', minFechaFin);
+
+                if (fechaFin.value && fechaFin.value <= this.value) {
+                    fechaFin.value = minFechaFin;
+                }
+            }
+        });
+
+        // Validar fechas antes del envío
+        document.querySelector('form').addEventListener('submit', function(e) {
+            if (fechaInicio.value && fechaFin.value) {
+                if (fechaInicio.value >= fechaFin.value) {
+                    e.preventDefault();
+                    alert('La fecha de fin debe ser posterior a la fecha de inicio');
+                    return false;
+                }
+
+                if (fechaInicio.value < today) {
+                    e.preventDefault();
+                    alert('La fecha de inicio no puede ser anterior a hoy');
+                    return false;
+                }
+            }
+        });
+    });
+
+    function limpiarFiltros() {
+        document.getElementById('fechaInicio').value = '';
+        document.getElementById('fechaFin').value = '';
+        document.getElementById('tipoHabitacion').value = '';
+        document.getElementById('capacidadMinima').value = '';
+        document.getElementById('precioMaximo').value = '';
+
+        // Enviar el formulario para mostrar todas las habitaciones
+        document.querySelector('form').submit();
+    }
+</script>

@@ -392,3 +392,14 @@ namespace HotelCostaAzulFinal.Controllers
         public string? Descripcion { get; set; }
         public decimal PrecioPorNoche { get; set; }
         public int Capacidad { get; set; }
+        public string? Caracteristicas { get; set; }
+    }
+
+    public class UpdateHabitacionDto
+    {
+        public string? Descripcion { get; set; }
+        public decimal? PrecioPorNoche { get; set; }
+        public string? Caracteristicas { get; set; }
+        public bool? Disponible { get; set; }
+    }
+}

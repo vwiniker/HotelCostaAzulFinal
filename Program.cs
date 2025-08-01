@@ -5,78 +5,66 @@ using HotelCostaAzulFinal.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configurar servicios
+// Add services to the container.
 builder.Services.AddDbContext<HotelContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Configurar Identity
+// Add Identity services
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
-    // Configuracion de contraseñas
+    // Password settings
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
-    options.Password.RequireUppercase = false;
     options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
     options.Password.RequiredLength = 6;
+    options.Password.RequiredUniqueChars = 1;
 
-    // Configuracion de usuario
-    options.User.RequireUniqueEmail = true;
-    options.SignIn.RequireConfirmedEmail = false;
-
-    // Configuracion de bloqueo
-    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+    // Lockout settings
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
     options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.AllowedForNewUsers = true;
+
+    // User settings
+    options.User.AllowedUserNameCharacters =
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+    options.User.RequireUniqueEmail = true;
+
+    // Sign in settings
+    options.SignIn.RequireConfirmedEmail = false;
+    options.SignIn.RequireConfirmedPhoneNumber = false;
 })
 .AddEntityFrameworkStores<HotelContext>()
 .AddDefaultTokenProviders();
 
-// Configurar cookies
+// Configure cookie settings
 builder.Services.ConfigureApplicationCookie(options =>
 {
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
     options.LoginPath = "/Account/Login";
-    options.LogoutPath = "/Account/Logout";
     options.AccessDeniedPath = "/Account/AccessDenied";
-    options.ExpireTimeSpan = TimeSpan.FromHours(24);
     options.SlidingExpiration = true;
 });
 
-// Agregar servicios MVC
+// Add MVC services
 builder.Services.AddControllersWithViews();
 
-// Agregar servicios de API
+// Add API Explorer for Swagger
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new()
-    {
-        Title = "Hotel Costa Azul API",
-        Version = "v1",
-        Description = "API para el sistema de reservas del Hotel Costa Azul"
-    });
-});
+builder.Services.AddSwaggerGen();
 
-// Configurar CORS
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll", builder =>
-    {
-        builder.AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader();
-    });
-});
-
-// Agregar logging
+// Add logging
 builder.Services.AddLogging();
 
 var app = builder.Build();
 
-// Configurar pipeline de requests
+// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
     app.UseSwagger();
-    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hotel Costa Azul API v1"));
+    app.UseSwaggerUI();
 }
 else
 {
@@ -88,45 +76,54 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseCors("AllowAll");
 
-// Configurar autenticación y autorización
+// Authentication & Authorization
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Configurar rutas
+// Configure routes
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-// Mapear controladores de API
-app.MapControllers();
+// API routes are handled by [Route] attributes in controllers
 
-// Crear roles y usuario admin inicial
+// Ensure database is created and seeded
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     try
     {
-        await CreateRolesAndAdminUser(services);
+        var context = services.GetRequiredService<HotelContext>();
+        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+        // Ensure database is created
+        context.Database.EnsureCreated();
+
+        // Seed roles
+        await SeedRoles(roleManager);
+
+        // Seed admin user
+        await SeedAdminUser(userManager, roleManager);
+
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogInformation("Database initialized successfully");
     }
     catch (Exception ex)
     {
         var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "Error creando roles y usuario administrador");
+        logger.LogError(ex, "An error occurred while initializing the database");
     }
 }
 
 app.Run();
 
-// Método para crear roles y usuario admin
-static async Task CreateRolesAndAdminUser(IServiceProvider serviceProvider)
+// Helper methods for seeding
+static async Task SeedRoles(RoleManager<IdentityRole> roleManager)
 {
-    var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-
-    // Crear roles
     string[] roleNames = { "Admin", "Cliente" };
+
     foreach (var roleName in roleNames)
     {
         if (!await roleManager.RoleExistsAsync(roleName))
@@ -134,8 +131,10 @@ static async Task CreateRolesAndAdminUser(IServiceProvider serviceProvider)
             await roleManager.CreateAsync(new IdentityRole(roleName));
         }
     }
+}
 
-    // Crear usuario administrador si no existe
+static async Task SeedAdminUser(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+{
     var adminEmail = "admin@hotelcostaazul.com";
     var adminUser = await userManager.FindByEmailAsync(adminEmail);
 

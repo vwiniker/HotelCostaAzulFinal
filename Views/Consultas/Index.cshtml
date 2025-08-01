@@ -1,0 +1,272 @@
+﻿@{
+    ViewData["Title"] = "Consultas";
+}
+
+<style>
+    .consultas-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 3rem 0;
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+        .consultas-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+
+    .consultas-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .consulta-card {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+        .consulta-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            border-color: #667eea;
+            text-decoration: none;
+            color: inherit;
+        }
+
+    .consulta-icon {
+        font-size: 3rem;
+        color: #667eea;
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    .consulta-titulo {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 1rem;
+    }
+
+    .consulta-descripcion {
+        color: #718096;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+    }
+
+    .consulta-link {
+        color: #667eea;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: color 0.3s;
+    }
+
+        .consulta-link:hover {
+            color: #5a67d8;
+        }
+
+    .info-section {
+        background: #f7fafc;
+        padding: 3rem 0;
+        margin: 3rem 0;
+        border-radius: 20px;
+        text-align: center;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .info-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+
+    .info-icon {
+        font-size: 2.5rem;
+        color: #38a169;
+        margin-bottom: 1rem;
+    }
+
+    @@media (max-width: 768px) {
+        .consultas-hero h1
+
+    {
+        font-size: 2rem;
+    }
+
+    .consultas-grid {
+        grid-template-columns: 1fr;
+    }
+
+    }
+</style>
+
+<div class="consultas-hero">
+    <div class="container">
+        <h1>🔍 Sistema de Consultas</h1>
+        <p>Accede a información detallada sobre disponibilidad y reservas</p>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Consultas principales -->
+    <div class="consultas-grid">
+        <a href="@Url.Action("DisponibilidadHabitaciones")" class="consulta-card">
+            <i class="fas fa-calendar-check consulta-icon"></i>
+            <h3 class="consulta-titulo">📅 Consulta de Disponibilidad</h3>
+            <p class="consulta-descripcion">
+                Verifica la disponibilidad de habitaciones en fechas específicas. Filtra por tipo, capacidad y precio para encontrar la opción perfecta.
+            </p>
+            <span class="consulta-link">
+                Consultar disponibilidad <i class="fas fa-arrow-right"></i>
+            </span>
+        </a>
+
+        <a href="@Url.Action("HistorialReservas")" class="consulta-card">
+            <i class="fas fa-history consulta-icon"></i>
+            <h3 class="consulta-titulo">📊 Historial de Reservas</h3>
+            <p class="consulta-descripcion">
+                Revisa el historial completo de reservas. Filtra por cliente, estado, fechas y habitaciones para análisis detallados.
+            </p>
+            <span class="consulta-link">
+                Ver historial <i class="fas fa-arrow-right"></i>
+            </span>
+        </a>
+
+        @if (User.IsInRole("Admin"))
+        {
+            <a href="/Reportes" class="consulta-card">
+                <i class="fas fa-chart-bar consulta-icon"></i>
+                <h3 class="consulta-titulo">📈 Reportes Avanzados</h3>
+                <p class="consulta-descripcion">
+                    Accede a reportes detallados de ocupación, ingresos y análisis de clientes frecuentes para toma de decisiones.
+                </p>
+                <span class="consulta-link">
+                    Ver reportes <i class="fas fa-arrow-right"></i>
+                </span>
+            </a>
+        }
+
+        <a href="/HabitacionesWeb" class="consulta-card">
+            <i class="fas fa-bed consulta-icon"></i>
+            <h3 class="consulta-titulo">🏠 Consulta de Habitaciones</h3>
+            <p class="consulta-descripcion">
+                Explora todas las habitaciones disponibles con filtros avanzados por precio, tipo y características.
+            </p>
+            <span class="consulta-link">
+                Explorar habitaciones <i class="fas fa-arrow-right"></i>
+            </span>
+        </a>
+    </div>
+
+    <!-- Información adicional -->
+    <div class="info-section">
+        <div class="container">
+            <h2 style="color: #2d3748; margin-bottom: 1rem;">ℹ️ Información de Consultas</h2>
+            <p style="color: #718096; font-size: 1.1rem; max-width: 600px; margin: 0 auto 2rem;">
+                Nuestro sistema de consultas te permite acceder a información en tiempo real
+            </p>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <i class="fas fa-clock info-icon"></i>
+                    <h4>Tiempo Real</h4>
+                    <p>Información actualizada al momento de la consulta</p>
+                </div>
+
+                <div class="info-card">
+                    <i class="fas fa-filter info-icon"></i>
+                    <h4>Filtros Avanzados</h4>
+                    <p>Múltiples opciones de filtrado para resultados precisos</p>
+                </div>
+
+                <div class="info-card">
+                    <i class="fas fa-download info-icon"></i>
+                    <h4>Exportación</h4>
+                    <p>Descarga los resultados en diferentes formatos</p>
+                </div>
+
+                <div class="info-card">
+                    <i class="fas fa-shield-alt info-icon"></i>
+                    <h4>Seguridad</h4>
+                    <p>Acceso seguro y datos protegidos</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Instrucciones -->
+    <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+        <h3 style="color: #2d3748; margin-bottom: 1.5rem; text-align: center;">
+            <i class="fas fa-info-circle" style="color: #667eea; margin-right: 0.5rem;"></i>
+            Cómo Usar las Consultas
+        </h3>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+            <div style="text-align: center;">
+                <div style="background: #667eea; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-weight: bold;">1</div>
+                <h4 style="color: #2d3748; margin-bottom: 0.5rem;">Selecciona el Tipo</h4>
+                <p style="color: #718096;">Elige el tipo de consulta que necesitas realizar</p>
+            </div>
+
+            <div style="text-align: center;">
+                <div style="background: #38a169; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-weight: bold;">2</div>
+                <h4 style="color: #2d3748; margin-bottom: 0.5rem;">Aplica Filtros</h4>
+                <p style="color: #718096;">Usa los filtros para obtener resultados específicos</p>
+            </div>
+
+            <div style="text-align: center;">
+                <div style="background: #e53e3e; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-weight: bold;">3</div>
+                <h4 style="color: #2d3748; margin-bottom: 0.5rem;">Revisa Resultados</h4>
+                <p style="color: #718096;">Analiza los datos mostrados en tiempo real</p>
+            </div>
+
+            <div style="text-align: center;">
+                <div style="background: #805ad5; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-weight: bold;">4</div>
+                <h4 style="color: #2d3748; margin-bottom: 0.5rem;">Exporta o Actúa</h4>
+                <p style="color: #718096;">Guarda los resultados o toma acciones basadas en los datos</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animación de entrada para las cards
+        const cards = document.querySelectorAll('.consulta-card, .info-card');
+        cards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+
+            setTimeout(() => {
+                card.style.transition = 'all 0.6s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+    });
+</script>
