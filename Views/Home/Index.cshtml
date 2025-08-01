@@ -1,0 +1,665 @@
+﻿@{
+    ViewData["Title"] = "Inicio";
+    Layout = "_Layout";
+}
+
+<style>
+    /* Hero Section */
+    .hero {
+        background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), linear-gradient(45deg, #087ea4, #06b6d4);
+        height: 90vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+    }
+
+    .hero-content h1 {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .hero-content p {
+        font-size: 1.3rem;
+        margin-bottom: 2rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .btn-primary {
+        background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+        color: white;
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+    /* Container */
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+
+    /* Section Title */
+    .section-title {
+        text-align: center;
+        font-size: 2.5rem;
+        margin-bottom: 3rem;
+        color: #2d3748;
+    }
+
+    /* Habitaciones Section */
+    .habitaciones-section {
+        background: #f8fafc;
+        padding: 4rem 0;
+    }
+
+    .habitaciones-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+    }
+
+    .habitacion-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+        .habitacion-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+    .habitacion-imagen {
+        height: 200px;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        color: white;
+    }
+
+    .habitacion-content {
+        padding: 1.5rem;
+    }
+
+    .habitacion-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .habitacion-numero {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #2d3748;
+    }
+
+    .habitacion-tipo {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .habitacion-precio {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #38a169;
+        margin-bottom: 1rem;
+    }
+
+        .habitacion-precio span {
+            font-size: 0.9rem;
+            color: #718096;
+            font-weight: normal;
+        }
+
+    .habitacion-descripcion {
+        color: #718096;
+        margin-bottom: 1rem;
+        line-height: 1.6;
+    }
+
+    .habitacion-caracteristicas {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .caracteristica {
+        background: #e2e8f0;
+        color: #4a5568;
+        padding: 0.25rem 0.5rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+    }
+
+    .habitacion-capacidad {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        color: #4a5568;
+    }
+
+    .btn-reservar {
+        width: 100%;
+        background: linear-gradient(45deg, #38a169, #2f855a);
+        color: white;
+        border: none;
+        padding: 0.75rem;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+        .btn-reservar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(56, 161, 105, 0.3);
+        }
+
+        .btn-reservar:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+    .estado-disponible {
+        color: #38a169;
+        font-weight: 600;
+    }
+
+    .estado-ocupado {
+        color: #e53e3e;
+        font-weight: 600;
+    }
+
+    /* Reservation Section */
+    .reservation-section {
+        background: #fff;
+        padding: 4rem 0;
+    }
+
+    .reservation-form {
+        background: white;
+        padding: 3rem;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        max-width: 800px;
+        margin: 0 auto;
+        border: 2px solid #e2e8f0;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+        .form-group label {
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+            .form-group input:focus,
+            .form-group select:focus {
+                outline: none;
+                border-color: #3182ce;
+            }
+
+    .loading-habitaciones {
+        text-align: center;
+        padding: 2rem;
+        color: #718096;
+    }
+
+    .error-message {
+        background: #fed7d7;
+        color: #c53030;
+        padding: 1rem;
+        border-radius: 10px;
+        margin: 1rem 0;
+        text-align: center;
+    }
+
+    /* Services Section */
+    .services-section {
+        padding: 4rem 0;
+    }
+
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+    }
+
+    .service-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+    .service-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        font-size: 2rem;
+        color: white;
+    }
+
+    .service-card h3 {
+        margin-bottom: 1rem;
+        color: #2d3748;
+    }
+
+    /* Loading animation */
+    @@keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .hero-content h1 {
+            font-size: 2.5rem;
+        }
+
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .habitaciones-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>Bienvenido a Hotel Costa Azul</h1>
+        <p>Disfruta de una experiencia única frente al mar con el mejor servicio y comodidad que mereces</p>
+        <a href="/HabitacionesWeb" class="btn-primary">Ver Habitaciones</a>
+    </div>
+</section>
+
+<!-- Habitaciones Section -->
+<section id="habitaciones" class="habitaciones-section">
+    <div class="container">
+        <h2 class="section-title">Nuestras Habitaciones</h2>
+
+        <div id="habitaciones-container">
+            <div class="loading-habitaciones">
+                <div style="display: inline-block; width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                <p style="margin-top: 1rem;">Cargando habitaciones...</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Reservation Section -->
+<section id="reservas" class="reservation-section">
+    <div class="container">
+        <h2 class="section-title">Haz tu Reserva</h2>
+        <div class="reservation-form">
+            <form id="reservationForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="checkin">Fecha de Entrada</label>
+                        <input type="date" id="checkin" name="checkin" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="checkout">Fecha de Salida</label>
+                        <input type="date" id="checkout" name="checkout" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="guests">Huéspedes</label>
+                        <select id="guests" name="guests" required>
+                            <option value="">Seleccionar...</option>
+                            <option value="1">1 Huésped</option>
+                            <option value="2">2 Huéspedes</option>
+                            <option value="3">3 Huéspedes</option>
+                            <option value="4">4 Huéspedes</option>
+                            <option value="5">5+ Huéspedes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="habitacionSelect">Habitación</label>
+                        <select id="habitacionSelect" name="habitacionSelect" required disabled>
+                            <option value="">Primero selecciona las fechas</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="datosClienteSection" style="display: none;">
+                    <h3 style="margin-bottom: 1.5rem; color: #2d3748;">Datos del Huésped</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="nombre">Nombre</label>
+                            <input type="text" id="nombre" name="nombre" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="apellido">Apellido</label>
+                            <input type="text" id="apellido" name="apellido" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="telefono">Teléfono</label>
+                            <input type="tel" id="telefono" name="telefono" required>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 1rem;">
+                        <label for="observaciones">Observaciones (Opcional)</label>
+                        <textarea id="observaciones" name="observaciones" rows="3" style="padding: 1rem; border: 2px solid #e2e8f0; border-radius: 10px; resize: vertical;"></textarea>
+                    </div>
+                </div>
+
+                <div id="resumenReserva" style="display: none; background: #f7fafc; padding: 1.5rem; border-radius: 10px; margin: 1.5rem 0;">
+                    <h4 style="color: #2d3748; margin-bottom: 1rem;">Resumen de la Reserva</h4>
+                    <div id="resumenContenido"></div>
+                </div>
+
+                <button type="submit" class="btn-primary" style="width: 100%;" id="btnReservar" disabled>
+                    Consultar Disponibilidad
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section id="servicios" class="services-section">
+    <div class="container">
+        <h2 class="section-title">Nuestros Servicios</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">🏊‍♀️</div>
+                <h3>Piscina</h3>
+                <p>Disfruta de nuestra hermosa piscina con vista al mar, perfecta para relajarte bajo el sol tropical.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🍽️</div>
+                <h3>Restaurante</h3>
+                <p>Exquisita gastronomía local e internacional preparada por nuestros chefs especializados.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">💆‍♀️</div>
+                <h3>Spa</h3>
+                <p>Relájate en nuestro spa de clase mundial con tratamientos rejuvenecedores y terapias relajantes.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🌊</div>
+                <h3>Playa Privada</h3>
+                <p>Acceso exclusivo a nuestra playa privada con arena blanca y aguas cristalinas del Caribe.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🏃‍♂️</div>
+                <h3>Gimnasio</h3>
+                <p>Mantente en forma en nuestro gimnasio totalmente equipado con vista panorámica al océano.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🚗</div>
+                <h3>Transporte</h3>
+                <p>Servicio de transporte al aeropuerto y tours por los lugares más hermosos de la región.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="~/js/hotel-api.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', async function() {
+        await cargarHabitaciones();
+        configurarFormularioReservas();
+    });
+
+    // Cargar habitaciones desde la API
+    async function cargarHabitaciones() {
+        try {
+            const habitaciones = await hotelAPI.getHabitacionesDisponibles();
+            mostrarHabitaciones(habitaciones);
+        } catch (error) {
+            console.error('Error cargando habitaciones:', error);
+            document.getElementById('habitaciones-container').innerHTML = `
+                <div class="error-message">
+                    <p>Error cargando habitaciones. <button onclick="cargarHabitaciones()" style="background: none; border: none; color: #c53030; text-decoration: underline; cursor: pointer;">Intentar de nuevo</button></p>
+                </div>
+            `;
+        }
+    }
+
+    // Mostrar habitaciones en el DOM
+    function mostrarHabitaciones(habitaciones) {
+        const container = document.getElementById('habitaciones-container');
+
+        if (habitaciones.length === 0) {
+            container.innerHTML = `
+                <div class="error-message">
+                    <p>No hay habitaciones disponibles en este momento.</p>
+                </div>
+            `;
+            return;
+        }
+
+        const habitacionesHTML = habitaciones.map(habitacion => {
+            const caracteristicas = habitacion.caracteristicas ?
+                habitacion.caracteristicas.split(',').map(c => `<span class="caracteristica">${c.trim()}</span>`).join('') :
+                '';
+
+            const icono = getIconoHabitacion(habitacion.tipo);
+
+            return `
+                <div class="habitacion-card" data-habitacion-id="${habitacion.id}">
+                    <div class="habitacion-imagen">
+                        ${icono}
+                    </div>
+                    <div class="habitacion-content">
+                        <div class="habitacion-header">
+                            <div class="habitacion-numero">Habitación ${habitacion.numero}</div>
+                            <div class="habitacion-tipo">${habitacion.tipo}</div>
+                        </div>
+                        <div class="habitacion-precio">
+                            ₡${habitacion.precioPorNoche.toLocaleString()}
+                            <span>/ noche</span>
+                        </div>
+                        <p class="habitacion-descripcion">${habitacion.descripcion || 'Habitación cómoda y elegante'}</p>
+                        <div class="habitacion-capacidad">
+                            <span>👥 Hasta ${habitacion.capacidad} huéspedes</span>
+                            <span class="estado-disponible">✅ Disponible</span>
+                        </div>
+                        <div class="habitacion-caracteristicas">
+                            ${caracteristicas}
+                        </div>
+                        <button class="btn-reservar" onclick="seleccionarHabitacion(${habitacion.id}, '${habitacion.numero}', '${habitacion.tipo}')">
+                            Seleccionar Habitación
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        container.innerHTML = `<div class="habitaciones-grid">${habitacionesHTML}</div>`;
+    }
+
+    // Obtener icono según tipo de habitación
+    function getIconoHabitacion(tipo) {
+        const iconos = {
+            'Standard': '🏠',
+            'Deluxe': '🏨',
+            'Suite': '🏰',
+            'Presidential': '👑'
+        };
+        return iconos[tipo] || '🏠';
+    }
+
+    // Seleccionar habitación y hacer scroll al formulario
+    function seleccionarHabitacion(id, numero, tipo) {
+        // Marcar habitación seleccionada visualmente
+        document.querySelectorAll('.habitacion-card').forEach(card => {
+            card.style.border = '';
+        });
+        document.querySelector(`[data-habitacion-id="${id}"]`).style.border = '3px solid #38a169';
+
+        // Actualizar select de habitación
+        const select = document.getElementById('habitacionSelect');
+        select.innerHTML = `<option value="${id}">Habitación ${numero} (${tipo})</option>`;
+        select.disabled = false;
+        select.value = id;
+
+        // Mostrar sección de datos del cliente
+        document.getElementById('datosClienteSection').style.display = 'block';
+
+        // Scroll al formulario
+        document.getElementById('reservas').scrollIntoView({ behavior: 'smooth' });
+
+        mostrarNotificacion(`Habitación ${numero} seleccionada`, 'success');
+    }
+
+    // Configurar formulario de reservas
+    function configurarFormularioReservas() {
+        const form = document.getElementById('reservationForm');
+        const checkin = document.getElementById('checkin');
+        const checkout = document.getElementById('checkout');
+        const guests = document.getElementById('guests');
+        const btnReservar = document.getElementById('btnReservar');
+
+        // Set minimum date to today
+        const today = new Date().toISOString().split('T')[0];
+        checkin.setAttribute('min', today);
+        checkout.setAttribute('min', today);
+
+        // Update checkout minimum date when checkin changes
+        checkin.addEventListener('change', function() {
+            const checkinDate = new Date(this.value);
+            checkinDate.setDate(checkinDate.getDate() + 1);
+            const minCheckout = checkinDate.toISOString().split('T')[0];
+            checkout.setAttribute('min', minCheckout);
+
+            if (checkout.value && checkout.value <= this.value) {
+                checkout.value = minCheckout;
+            }
+
+            actualizarEstadoFormulario();
+        });
+
+        checkout.addEventListener('change', actualizarEstadoFormulario);
+        guests.addEventListener('change', actualizarEstadoFormulario);
+
+        function actualizarEstadoFormulario() {
+            const fechasSeleccionadas = checkin.value && checkout.value;
+            const huespedes = guests.value;
+            const habitacion = document.getElementById('habitacionSelect').value;
+
+            if (fechasSeleccionadas && huespedes) {
+                btnReservar.disabled = false;
+                if (habitacion) {
+                    btnReservar.textContent = 'Confirmar Reserva';
+                    mostrarResumenReserva();
+                } else {
+                    btnReservar.textContent = 'Consultar Disponibilidad';
+                }
+            } else {
+                btnReservar.disabled = true;
+                btnReservar.textContent = 'Consultar Disponibilidad';
+            }
+        }
+
+        // Handle form submission
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const fechaEntrada = checkin.value;
+            const fechaSalida = checkout.value;
+            const numeroHuespedes = parseInt(guests.value);
+            const habitacionId = document.getElementById('habitacionSelect').value;
+
+            if (!habitacionId) {
+                // Consultar disponibilidad
+                await consultarDisponibilidad(fechaEntrada, fechaSalida, numeroHuespedes);
+            } else {
+                // Crear reserva
+                await crearReserva();
+            }
+        });
+    }
+
+    // Smooth scrolling para navegación
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+</script>

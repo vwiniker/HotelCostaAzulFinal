@@ -1,0 +1,621 @@
+﻿@model List<HotelCostaAzulFinal.Models.Habitacion>
+@{
+    ViewData["Title"] = "Habitaciones";
+}
+
+<style>
+    .habitaciones-hero {
+        background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                    linear-gradient(45deg, #667eea, #764ba2);
+        height: 60vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        margin-bottom: 4rem;
+    }
+
+    .hero-content h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .hero-content p {
+        font-size: 1.2rem;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+
+    .filtros-section {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        margin-bottom: 3rem;
+        border: 2px solid #e2e8f0;
+    }
+
+    .filtros-title {
+        font-size: 1.5rem;
+        color: #2d3748;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .filtros-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .filtro-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .filtro-group label {
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #4a5568;
+        font-size: 0.9rem;
+    }
+
+    .filtro-group select,
+    .filtro-group input {
+        padding: 0.75rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+        background: white;
+    }
+
+    .filtro-group select:focus,
+    .filtro-group input:focus {
+        outline: none;
+        border-color: #667eea;
+    }
+
+    .filtros-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+    }
+
+    .btn-filtrar {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 25px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .btn-filtrar:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-limpiar {
+        background: white;
+        color: #718096;
+        border: 2px solid #e2e8f0;
+        padding: 0.75rem 2rem;
+        border-radius: 25px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .btn-limpiar:hover {
+        border-color: #cbd5e0;
+        color: #4a5568;
+    }
+
+    .habitaciones-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .habitacion-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: all 0.3s;
+        border: 2px solid transparent;
+    }
+
+    .habitacion-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        border-color: #667eea;
+    }
+
+    .habitacion-imagen {
+        height: 220px;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4rem;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .habitacion-imagen::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, rgba(102, 126, 234, 0.8), rgba(118, 75, 162, 0.8));
+        transition: opacity 0.3s;
+    }
+
+    .habitacion-card:hover .habitacion-imagen::before {
+        opacity: 0.6;
+    }
+
+    .habitacion-badge {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        background: rgba(255,255,255,0.9);
+        color: #667eea;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        z-index: 2;
+    }
+
+    .habitacion-content {
+        padding: 2rem;
+    }
+
+    .habitacion-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+
+    .habitacion-titulo {
+        flex: 1;
+    }
+
+    .habitacion-numero {
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: #2d3748;
+        margin-bottom: 0.25rem;
+    }
+
+    .habitacion-tipo {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .habitacion-precio {
+        text-align: right;
+    }
+
+    .precio-amount {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #38a169;
+        line-height: 1;
+    }
+
+    .precio-period {
+        font-size: 0.9rem;
+        color: #718096;
+    }
+
+    .habitacion-descripcion {
+        color: #718096;
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+    }
+
+    .habitacion-features {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+        margin-bottom: 2rem;
+    }
+
+    .feature {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+        color: #4a5568;
+    }
+
+    .feature-icon {
+        font-size: 1.1rem;
+    }
+
+    .habitacion-caracteristicas {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .caracteristica {
+        background: #f7fafc;
+        color: #4a5568;
+        padding: 0.4rem 0.8rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        border: 1px solid #e2e8f0;
+    }
+
+    .habitacion-actions {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .btn-ver-detalle {
+        flex: 1;
+        background: white;
+        color: #667eea;
+        border: 2px solid #667eea;
+        padding: 0.75rem;
+        border-radius: 10px;
+        font-weight: 600;
+        text-decoration: none;
+        text-align: center;
+        transition: all 0.3s;
+    }
+
+    .btn-ver-detalle:hover {
+        background: #667eea;
+        color: white;
+        text-decoration: none;
+    }
+
+    .btn-reservar-habitacion {
+        flex: 2;
+        background: linear-gradient(45deg, #38a169, #2f855a);
+        color: white;
+        border: none;
+        padding: 0.75rem;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .btn-reservar-habitacion:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(56, 161, 105, 0.3);
+    }
+
+    .no-habitaciones {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: #718096;
+    }
+
+    .no-habitaciones-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+
+    .loading {
+        text-align: center;
+        padding: 2rem;
+        color: #718096;
+    }
+
+    .stats-bar {
+        background: #f7fafc;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #4a5568;
+        font-weight: 600;
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .habitaciones-hero h1 {
+            font-size: 2rem;
+        }
+
+        .habitaciones-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .filtros-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .filtros-actions {
+            flex-direction: column;
+        }
+
+        .habitacion-features {
+            grid-template-columns: 1fr;
+        }
+
+        .stats-bar {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+</style>
+
+<!-- Hero Section -->
+<section class="habitaciones-hero">
+    <div class="hero-content">
+        <h1>🏨 Nuestras Habitaciones</h1>
+        <p>Descubre el confort y la elegancia en cada una de nuestras exclusivas habitaciones con vista al mar</p>
+    </div>
+</section>
+
+<div class="container">
+    <!-- Estadísticas -->
+    <div class="stats-bar">
+        <div class="stat-item">
+            <span>🏠</span>
+            <span>@Model.Count habitaciones disponibles</span>
+        </div>
+        <div class="stat-item">
+            <span>💰</span>
+            <span>Desde ₡@(ViewBag.PrecioMinimo?.ToString("N0")) por noche</span>
+        </div>
+        <div class="stat-item">
+            <span>⭐</span>
+            <span>@ViewBag.TiposDisponibles.Count tipos diferentes</span>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="filtros-section">
+        <h3 class="filtros-title">
+            🔍 Filtrar Habitaciones
+        </h3>
+        <form id="filtrosForm">
+            <div class="filtros-grid">
+                <div class="filtro-group">
+                    <label for="tipoFiltro">Tipo de Habitación</label>
+                    <select id="tipoFiltro" name="tipo">
+                        <option value="">Todos los tipos</option>
+                        @foreach (var tipo in ViewBag.TiposDisponibles)
+                        {
+                                <option value="@tipo">@tipo</option>
+                        }
+                    </select>
+                </div>
+                <div class="filtro-group">
+                    <label for="precioMinFiltro">Precio Mínimo</label>
+                    <input type="number" id="precioMinFiltro" name="precioMin" min="0" step="1000" placeholder="₡0">
+                </div>
+                <div class="filtro-group">
+                    <label for="precioMaxFiltro">Precio Máximo</label>
+                    <input type="number" id="precioMaxFiltro" name="precioMax" min="0" step="1000" placeholder="₡@ViewBag.PrecioMaximo">
+                </div>
+                <div class="filtro-group">
+                    <label for="capacidadFiltro">Capacidad Mínima</label>
+                    <select id="capacidadFiltro" name="capacidad">
+                        <option value="">Cualquier capacidad</option>
+                        <option value="1">1+ personas</option>
+                        <option value="2">2+ personas</option>
+                        <option value="3">3+ personas</option>
+                        <option value="4">4+ personas</option>
+                        <option value="5">5+ personas</option>
+                    </select>
+                </div>
+            </div>
+            <div class="filtros-actions">
+                <button type="submit" class="btn-filtrar">🔍 Filtrar</button>
+                <button type="button" class="btn-limpiar" onclick="limpiarFiltros()">🗑️ Limpiar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Grid de Habitaciones -->
+    <div id="habitacionesContainer">
+        @if (Model.Any())
+        {
+                <div class="habitaciones-grid">
+                @foreach (var habitacion in Model)
+                {
+                            <div class="habitacion-card">
+                                <div class="habitacion-imagen">
+                                    <div class="habitacion-badge">@habitacion.Tipo</div>
+                            @{
+                                var icono = habitacion.Tipo switch
+                                {
+                                    "Standard" => "🏠",
+                                    "Deluxe" => "🏨",
+                                    "Suite" => "🏰",
+                                    "Presidential" => "👑",
+                                    _ => "🏠"
+                                };
+                            }
+                            @icono
+                                </div>
+                                <div class="habitacion-content">
+                                    <div class="habitacion-header">
+                                        <div class="habitacion-titulo">
+                                            <div class="habitacion-numero">Habitación @habitacion.Numero</div>
+                                        </div>
+                                        <div class="habitacion-precio">
+                                            <div class="precio-amount">₡@habitacion.PrecioPorNoche.ToString("N0")</div>
+                                            <div class="precio-period">por noche</div>
+                                        </div>
+                                    </div>
+
+                                    <p class="habitacion-descripcion">
+                                @(habitacion.Descripcion ?? "Habitación cómoda y elegante con todas las comodidades necesarias para una estadía perfecta.")
+                                    </p>
+
+                                    <div class="habitacion-features">
+                                        <div class="feature">
+                                            <span class="feature-icon">👥</span>
+                                            <span>Hasta @habitacion.Capacidad huéspedes</span>
+                                        </div>
+                                        <div class="feature">
+                                            <span class="feature-icon">✅</span>
+                                            <span>@(habitacion.Disponible ? "Disponible" : "Ocupada")</span>
+                                        </div>
+                                        <div class="feature">
+                                            <span class="feature-icon">🏷️</span>
+                                            <span>@habitacion.Tipo</span>
+                                        </div>
+                                        <div class="feature">
+                                            <span class="feature-icon">⭐</span>
+                                            <span>5 estrellas</span>
+                                        </div>
+                                    </div>
+
+                            @if (!string.IsNullOrEmpty(habitacion.Caracteristicas))
+                            {
+                                            <div class="habitacion-caracteristicas">
+                                    @foreach (var caracteristica in habitacion.Caracteristicas.Split(','))
+                                    {
+                                                        <span class="caracteristica">@caracteristica.Trim()</span>
+                                    }
+                                            </div>
+                            }
+
+                                    <div class="habitacion-actions">
+                                        <a href="/HabitacionesWeb/Detalle/@habitacion.Id" class="btn-ver-detalle">
+                                            Ver Detalles
+                                        </a>
+                                        <button class="btn-reservar-habitacion" onclick="reservarHabitacion(@habitacion.Id, '@habitacion.Numero', '@habitacion.Tipo')">
+                                            Reservar Ahora
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                }
+                </div>
+        }
+        else
+        {
+                <div class="no-habitaciones">
+                    <div class="no-habitaciones-icon">🏨</div>
+                    <h3>No hay habitaciones disponibles</h3>
+                    <p>Intenta ajustar los filtros o contacta con nosotros para más opciones.</p>
+                </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+        <script src="~/js/hotel-api.js"></script>
+        <script>
+            // Filtros
+            document.getElementById('filtrosForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const formData = new FormData(this);
+                const params = new URLSearchParams();
+
+                for (let [key, value] of formData.entries()) {
+                    if (value) {
+                        params.append(key, value);
+                    }
+                }
+
+                try {
+                    showLoading();
+                    const response = await fetch(`/HabitacionesWeb/Filtrar?${params}`);
+                    const html = await response.text();
+                    document.getElementById('habitacionesContainer').innerHTML = html;
+                    hideLoading();
+
+                    mostrarNotificacion('Filtros aplicados correctamente', 'success');
+                } catch (error) {
+                    console.error('Error aplicando filtros:', error);
+                    mostrarNotificacion('Error aplicando filtros', 'error');
+                    hideLoading();
+                }
+            });
+
+            function limpiarFiltros() {
+                document.getElementById('filtrosForm').reset();
+                document.getElementById('filtrosForm').dispatchEvent(new Event('submit'));
+            }
+
+            function reservarHabitacion(id, numero, tipo) {
+                // Guardar selección en localStorage
+                localStorage.setItem('habitacionSeleccionada', JSON.stringify({
+                    id: id,
+                    numero: numero,
+                    tipo: tipo
+                }));
+
+                // Redirigir a la página principal con ancla de reservas
+                window.location.href = '/#reservas';
+            }
+
+            function showLoading() {
+                document.getElementById('habitacionesContainer').innerHTML = `
+                    <div class="loading">
+                        <div style="display: inline-block; width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #667eea; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                        <p style="margin-top: 1rem;">Filtrando habitaciones...</p>
+                    </div>
+                `;
+            }
+
+            function hideLoading() {
+                // El loading se oculta automáticamente al cargar el nuevo contenido
+            }
+
+            // Animación de entrada
+            document.addEventListener('DOMContentLoaded', function() {
+                const cards = document.querySelectorAll('.habitacion-card');
+                cards.forEach((card, index) => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(30px)';
+
+                    setTimeout(() => {
+                        card.style.transition = 'all 0.6s ease';
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, index * 100);
+                });
+            });
+        </script>
+}

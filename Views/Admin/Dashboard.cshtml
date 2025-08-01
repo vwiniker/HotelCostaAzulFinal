@@ -1,0 +1,321 @@
+﻿@model HotelCostaAzulFinal.Models.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard Administrativo";
+}
+<style>
+    .dashboard-container {
+        padding: 2rem;
+        background: #f8fafc;
+        min-height: 100vh;
+    }
+
+    .dashboard-header {
+        margin-bottom: 2rem;
+    }
+
+    .dashboard-title {
+        font-size: 2.5rem;
+        color: #2d3748;
+        margin-bottom: 0.5rem;
+    }
+
+    .dashboard-subtitle {
+        color: #718096;
+        font-size: 1.1rem;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        border-left: 4px solid;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .stat-card.blue {
+            border-left-color: #3182ce;
+        }
+
+        .stat-card.green {
+            border-left-color: #38a169;
+        }
+
+        .stat-card.yellow {
+            border-left-color: #d69e2e;
+        }
+
+        .stat-card.purple {
+            border-left-color: #805ad5;
+        }
+
+        .stat-card.red {
+            border-left-color: #e53e3e;
+        }
+
+        .stat-card.indigo {
+            border-left-color: #5a67d8;
+        }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        color: #718096;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .content-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .section-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        color: #2d3748;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .reserva-item {
+        padding: 1rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+        transition: background 0.3s;
+    }
+
+        .reserva-item:hover {
+            background: #f7fafc;
+        }
+
+    .reserva-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .reserva-cliente {
+        font-weight: 600;
+        color: #2d3748;
+    }
+
+    .reserva-estado {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .estado-pendiente {
+        background: #fed7d7;
+        color: #c53030;
+    }
+
+    .estado-confirmada {
+        background: #c6f6d5;
+        color: #2f855a;
+    }
+
+    .estado-completada {
+        background: #bee3f8;
+        color: #2b6cb0;
+    }
+
+    .reserva-detalles {
+        font-size: 0.9rem;
+        color: #718096;
+    }
+
+    .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .action-btn {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        padding: 1rem;
+        border-radius: 10px;
+        text-decoration: none;
+        text-align: center;
+        transition: transform 0.3s;
+        font-weight: 600;
+    }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            color: white;
+            text-decoration: none;
+        }
+
+    .chart-placeholder {
+        height: 200px;
+        background: linear-gradient(45deg, #f7fafc, #edf2f7);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #718096;
+        font-style: italic;
+    }
+
+    @@media (max-width: 768px) {
+        .content-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .stats-grid {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+    }
+</style>
+
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">🏨 Dashboard Hotel Costa Azul</h1>
+        <p class="dashboard-subtitle">Panel de control administrativo - @DateTime.Now.ToString("dddd, dd MMMM yyyy")</p>
+    </div>
+
+    <!-- Estadísticas principales -->
+    <div class="stats-grid">
+        <div class="stat-card blue">
+            <div class="stat-number">@Model.TotalHabitaciones</div>
+            <div class="stat-label">Total Habitaciones</div>
+        </div>
+
+        <div class="stat-card green">
+            <div class="stat-number">@Model.HabitacionesDisponibles</div>
+            <div class="stat-label">Habitaciones Disponibles</div>
+        </div>
+
+        <div class="stat-card yellow">
+            <div class="stat-number">@Model.TotalClientes</div>
+            <div class="stat-label">Clientes Registrados</div>
+        </div>
+
+        <div class="stat-card purple">
+            <div class="stat-number">@Model.TotalReservas</div>
+            <div class="stat-label">Total Reservas</div>
+        </div>
+
+        <div class="stat-card red">
+            <div class="stat-number">@Model.ReservasPendientes</div>
+            <div class="stat-label">Reservas Pendientes</div>
+        </div>
+
+        <div class="stat-card indigo">
+            <div class="stat-number">@Model.IngresosTotales.ToString("C")</div>
+            <div class="stat-label">Ingresos Totales</div>
+        </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="content-grid">
+        <!-- Últimas reservas -->
+        <div class="section-card">
+            <h2 class="section-title">
+                📋 Últimas Reservas
+            </h2>
+
+            @if (Model.UltimasReservas.Any())
+            {
+                @foreach (var reserva in Model.UltimasReservas)
+                {
+                    <div class="reserva-item">
+                        <div class="reserva-header">
+                            <span class="reserva-cliente">@reserva.Usuario.Nombre @reserva.Usuario.Apellido</span>
+                            <span class="reserva-estado estado-@reserva.Estado.ToLower()">@reserva.Estado</span>
+                        </div>
+                        <div class="reserva-detalles">
+                            🏠 Habitación @reserva.Habitacion.Numero (@reserva.Habitacion.Tipo) |
+                            📅 @reserva.FechaInicio.ToString("dd/MM") - @reserva.FechaFin.ToString("dd/MM") |
+                            💰 @reserva.Total.ToString("C")
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-center text-muted">No hay reservas registradas</p>
+            }
+        </div>
+
+        <!-- Estadísticas adicionales -->
+        <div class="section-card">
+            <h2 class="section-title">
+                📊 Estadísticas Rápidas
+            </h2>
+
+            <div style="margin-bottom: 2rem;">
+                <h4>Habitaciones por Tipo</h4>
+                <div class="chart-placeholder">
+                    Gráfico de habitaciones<br>
+                    (Chart.js se puede agregar aquí)
+                </div>
+            </div>
+
+            <div>
+                <h4>Estado del Hotel</h4>
+                <p>✅ Confirmadas: @Model.ReservasConfirmadas</p>
+                <p>⏳ Pendientes: @Model.ReservasPendientes</p>
+                <p>📅 Reservas hoy: @Model.ReservasHoy</p>
+                <p>🏠 Ocupación: @Math.Round((double)(Model.TotalHabitaciones - Model.HabitacionesDisponibles) / Model.TotalHabitaciones * 100, 1)%</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Acciones rápidas -->
+    <div class="section-card">
+        <h2 class="section-title">⚡ Acciones Rápidas</h2>
+
+        <div class="quick-actions">
+            <a href="/swagger" class="action-btn">
+                🔧 API Documentation
+            </a>
+
+            <a href="/api/habitaciones" class="action-btn">
+                🏠 Ver Habitaciones (API)
+            </a>
+
+            <a href="/api/reservas" class="action-btn">
+                📋 Ver Reservas (API)
+            </a>
+
+            <a href="/api/clientes" class="action-btn">
+                👥 Ver Clientes (API)
+            </a>
+        </div>
+    </div>
+</div>

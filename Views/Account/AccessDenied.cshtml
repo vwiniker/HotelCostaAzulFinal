@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Acceso Denegado";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="text-center">
+                <div class="mb-4">
+                    <i class="fas fa-exclamation-triangle text-warning" style="font-size: 6rem;"></i>
+                </div>
+                <h1 class="display-4 text-danger">Acceso Denegado</h1>
+                <p class="lead">No tienes permisos para acceder a esta página.</p>
+                <hr class="my-4">
+                <p>Si crees que esto es un error, por favor contacta al administrador.</p>
+                <a class="btn btn-primary btn-lg" asp-controller="Home" asp-action="Index">
+                    <i class="fas fa-home"></i>
+                    Volver al Inicio
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
